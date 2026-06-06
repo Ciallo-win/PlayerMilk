@@ -56,6 +56,7 @@ Milk:
       duration: 60       # Duration in seconds
       amplifier: 0       # Effect level (0 = level I)
       particles: true    # Show particle effects
+```
 
 ## build
   run mvn clean package
