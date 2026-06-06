@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<!DOCTYPE xml>
+<project name="PlayerMilk" default="Build">
+
+	<!-- Build script for live debugging - copies compiled plugin to server -->
+
+    <target name="Build">
+    	<!-- Copy the plugin jar to your server's plugins folder.
+    	     Edit the path below to match your server location. -->
+    	<jar jarfile="C:/Users/YourUser/Server/plugins/${ant.project.name}.jar" basedir="./target/classes/" includes="**/*" />
+    </target>
+
+</project>

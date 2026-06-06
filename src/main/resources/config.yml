@@ -1,0 +1,76 @@
+# =========================================
+#  PlayerMilk Configuration
+# =========================================
+
+# Whether the plugin is enabled
+Milk:
+  Enabled: true
+
+  # Damage dealt to the player being milked (set to 0 for no damage)
+  Damage: 1.0
+
+  # Death message when a player is milked to death (set to 'none' to disable)
+  # Placeholders: {player} = milker, {player2} = target
+  Death_Message: '{player2} 被 {player} 挤奶致死'
+
+  # Custom name for the obtained milk bucket (set to 'none' for default name)
+  # Placeholders: {player} = milker, {player2} = target, {time} = current date/time
+  Bucket_Name: '&f{player2}的奶桶'
+
+  # Cooldown in seconds between milking (set to 0 to disable)
+  Cooldown: 5
+
+  # Effects applied when drinking PlayerMilk milk (NOT regular cow milk)
+  # Supports multiple effects. Use effect ID (name or numeric 1-33 from the list).
+  # Set to {} or remove to disable effects.
+  # List: 1=speed, 2=slowness, 3=haste, 4=mining_fatigue, 5=strength, 6=instant_health,
+  #       7=instant_damage, 8=jump_boost, 9=nausea, 10=regeneration, 11=resistance,
+  #       12=fire_resistance, 13=water_breathing, 14=invisibility, 15=blindness,
+  #       16=night_vision, 17=hunger, 18=weakness, 19=poison, 20=wither,
+  #       21=health_boost, 22=absorption, 23=saturation, 24=glowing, 25=levitation,
+  #       26=luck, 27=unluck, 28=slow_falling, 29=conduit_power, 30=dolphins_grace,
+  #       31=bad_omen, 32=hero_of_the_village, 33=darkness
+  #
+  # Per-effect fields:
+  #  id:         Effect ID (name or numeric), e.g. speed, 10
+  #  duration:   Duration in seconds (default: 60)
+  #  amplifier:  Effect level (0 = I, 1 = II, etc.) (default: 0)
+  #  particles:  true = show potion particles (default), false = hide potion particles,
+  #              or a particle type string (e.g. HEART, HAPPY_VILLAGER, FLAME) to show
+  #              extra particles on top (default: true)
+  #  particle_amount: Number of extra particles when using a particle type string (default: 5)
+  #  ambient:    Whether the effect shows as ambient (default: false)
+  #  show_icon:  Whether the effect icon shows in the HUD (default: true)
+  #  sound_name: Optional sound to play when effect is applied (e.g. ENTITY_PLAYER_LEVELUP)
+  Effects:
+    effect1:
+      id: 'speed'
+      duration: 60
+      amplifier: 0
+      particles: true
+    # effect2:
+    #   id: 'resistance'
+    #   duration: 120
+    #   amplifier: 0
+    #   particles: true
+    #   # particles: HEART
+    #   # particle_amount: 10
+    #   # ambient: true
+    #   # show_icon: true
+    #   # sound_name: ENTITY_PLAYER_LEVELUP
+
+# Date format used for the {time} placeholder
+Date_Format: 'yyyy-MM-dd HH:mm:ss'
+
+# Messages (set any to 'none' to disable)
+Messages:
+  Success_Milker: '&a你成功挤了 {player2} 的奶！'
+  Success_Target: '&e{player} 挤了你的奶！'
+  Cooldown: '&c请等待 {time} 秒后再挤奶！'
+
+# Command messages
+Command:
+  No_Permission: '&c你没有权限使用此命令！'
+  Reload: '&a配置文件已重载！'
+  Toggle_On: '&aPlayerMilk 已启用！'
+  Toggle_Off: '&cPlayerMilk 已禁用！'
