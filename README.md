@@ -24,11 +24,29 @@ A fun Minecraft Bukkit/Spigot plugin that allows players to use an empty bucket 
 | `/playermilk set` | List all configuration keys |
 | `/playermilk set <key> <value>` | Modify a config key (auto-saves) |
 | `/playermilk effects list` | List all potion effects |
-| `/playermilk effects add <name> <id> <dur> <amp>` | Add a potion effect |
+| `/playermilk effects add <name> <dur> <amp>` | Add a potion effect |
 | `/playermilk effects remove <name>` | Remove a potion effect |
 | `/playermilk effects set <name> <field> <value>` | Edit an effect field |
 
 **Permission**: All commands require `playermilk.admin` permission. OPs have it by default.
+
+### Set Command
+
+ `Enabled` - Enable/disable the plugin
+ `Damage` - Damage dealt when milking
+ `Cooldown` - Cooldown in seconds
+ `Death_Message` - Custom death message
+ `Bucket_Name` - Custom milk bucket name
+ `Date_Format` - Date format for placeholders (yyyy-MM-dd HH:mm:ss)
+ `Allow_Chestplate_Milk` - Allow milking with chestplate (default: false)
+ `Success_Milker` - Message sent to the milker
+ `Success_Target` - Message sent to the target
+ `Cooldown_Message` - Message sent when on cooldown
+
+## Configuration
+
+### Effects Configuration (`config.yml`)
+
 
 ## Placeholders
 
