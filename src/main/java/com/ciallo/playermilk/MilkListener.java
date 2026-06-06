@@ -1,5 +1,7 @@
 package com.ciallo.playermilk;
 
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,6 +29,18 @@ public final class MilkListener implements Listener {
 
         Player milker = event.getPlayer();
         Player target = (Player) event.getRightClicked();
+
+        FileConfiguration config = PlayerMilk.getInstance().getConfig();
+        if (!config.getBoolean("Milk.Allow_Chestplate_Milk", false)) {
+            ItemStack chest = target.getInventory().getChestplate();
+            if (chest != null && chest.getType() != Material.AIR) {
+                String msg = config.getString("Messages.Chestplate_Block", "&c不能给穿胸甲的玩家挤奶！");
+                if (!msg.equalsIgnoreCase("none")) {
+                    milker.sendMessage(PlayerMilk.colorize(msg));
+                }
+                return;
+            }
+        }
 
         ItemStack hand = milker.getInventory().getItemInMainHand();
         if (hand == null || hand.getType() != Material.BUCKET || hand.getAmount() <= 0) {
@@ -64,7 +78,7 @@ public final class MilkListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerConsume(PlayerItemConsumeEvent event) {
         ItemStack item = event.getItem();
 
@@ -72,6 +86,9 @@ public final class MilkListener implements Listener {
             return;
         }
 
-        PlayerMilk.applyMilkEffects(event.getPlayer());
+        Player player = event.getPlayer();
+        Bukkit.getScheduler().runTaskLater(PlayerMilk.getInstance(), () -> {
+            PlayerMilk.applyMilkEffects(player);
+        }, 1L);
     }
 }

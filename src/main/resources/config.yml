@@ -20,6 +20,9 @@ Milk:
   # Cooldown in seconds between milking (set to 0 to disable)
   Cooldown: 5
 
+  # Whether players wearing chestplates can be milked (set true to allow)
+  Allow_Chestplate_Milk: false
+
   # Effects applied when drinking PlayerMilk milk (NOT regular cow milk)
   # Supports multiple effects. Use effect ID (name or numeric 1-33 from the list).
   # Set to {} or remove to disable effects.
@@ -67,6 +70,7 @@ Messages:
   Success_Milker: '&a你成功挤了 {player2} 的奶！'
   Success_Target: '&e{player} 挤了你的奶！'
   Cooldown: '&c请等待 {time} 秒后再挤奶！'
+  Chestplate_Block: '&c不能给穿胸甲的玩家挤奶！'
 
 # Command messages
 Command:

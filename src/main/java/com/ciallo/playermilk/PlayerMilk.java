@@ -123,7 +123,9 @@ public final class PlayerMilk extends JavaPlugin {
                 long remaining = (cooldownMs - (now - lastUsed)) / 1000L;
                 String msg = config.getString("Messages.Cooldown", "&cPlease wait {time} seconds before milking again!")
                         .replace("{time}", String.valueOf(remaining + 1));
-                milker.sendMessage(colorize(msg));
+                if (!msg.equalsIgnoreCase("none")) {
+                    milker.sendMessage(colorize(msg));
+                }
                 return false;
             }
         }
@@ -162,7 +164,10 @@ public final class PlayerMilk extends JavaPlugin {
             milkBucket.setItemMeta(meta);
         }
 
-        milker.getInventory().addItem(milkBucket);
+        Map<Integer, ItemStack> overflow = milker.getInventory().addItem(milkBucket);
+        for (ItemStack leftover : overflow.values()) {
+            milker.getWorld().dropItemNaturally(milker.getLocation(), leftover);
+        }
 
         target.getWorld().playSound(target.getLocation(), org.bukkit.Sound.ENTITY_COW_MILK, 1.0f, 1.0f);
 
@@ -272,12 +277,12 @@ public final class PlayerMilk extends JavaPlugin {
             PotionEffectType type = null;
 
             try {
-                int numericId = Integer.parseInt(effectId);
+                int numericId = Integer.parseInt(effectId.trim());
                 type = POTION_ID_MAP.get(numericId);
             } catch (NumberFormatException ignored) {}
 
             if (type == null) {
-                type = PotionEffectType.getByName(effectId.toUpperCase());
+                type = PotionEffectType.getByName(effectId.trim().toUpperCase());
             }
             if (type == null) continue;
 
@@ -300,7 +305,8 @@ public final class PlayerMilk extends JavaPlugin {
             boolean ambient = effectCfg.getBoolean("ambient", false);
             boolean showIcon = effectCfg.getBoolean("show_icon", true);
 
-            player.addPotionEffect(new PotionEffect(type, duration, amplifier, ambient, showPotionParticles, showIcon));
+            PotionEffect effect = new PotionEffect(type, duration, amplifier, ambient, showPotionParticles);
+            player.addPotionEffect(effect);
 
             String soundName = effectCfg.getString("sound_name");
             if (soundName != null && !soundName.isEmpty()) {
