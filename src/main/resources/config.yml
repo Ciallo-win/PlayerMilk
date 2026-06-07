@@ -17,6 +17,13 @@ Milk:
   # Placeholders: {player} = milker, {player2} = target, {time} = current date/time
   Bucket_Name: '&f{player2}的奶桶'
 
+  # Lore lines for the obtained milk bucket (leave empty list [] or remove to disable)
+  # Supports color codes with & and placeholders ({player}, {player2}, {time})
+  Bucket_Lore:
+    - '&7挤奶者: &f{player}'
+    - '&7被挤者: &f{player2}'
+    - '&7时间: &f{time}'
+
   # Cooldown in seconds between milking (set to 0 to disable)
   Cooldown: 5
 

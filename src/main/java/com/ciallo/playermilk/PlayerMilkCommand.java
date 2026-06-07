@@ -37,6 +37,7 @@ public final class PlayerMilkCommand implements CommandExecutor, TabCompleter {
         SETTINGS_MAP.put("bucket-name",         "Milk.Bucket_Name");
         SETTINGS_MAP.put("cooldown",            "Milk.Cooldown");
         SETTINGS_MAP.put("allow-chestplate-milk", "Milk.Allow_Chestplate_Milk");
+        SETTINGS_MAP.put("bucket-lore",         "Milk.Bucket_Lore");
         SETTINGS_MAP.put("date-format",         "Date_Format");
         SETTINGS_MAP.put("success-milker",      "Messages.Success_Milker");
         SETTINGS_MAP.put("success-target",      "Messages.Success_Target");
@@ -245,6 +246,87 @@ public final class PlayerMilkCommand implements CommandExecutor, TabCompleter {
     // ===========================
     //  /playermilk set ...
     // ===========================
+    private void handleBucketLoreSet(CommandSender sender, String[] args, String configPath, String label) {
+        FileConfiguration config = PlayerMilk.getInstance().getConfig();
+
+        if (args.length < 4) {
+            sender.sendMessage(PlayerMilk.colorize("&cUsage: /" + label + " set bucket-lore <line> <text>"));
+            sender.sendMessage(PlayerMilk.colorize("&7  line can be:"));
+            sender.sendMessage(PlayerMilk.colorize("&7    number (1, 2, 3...) — set that line"));
+            sender.sendMessage(PlayerMilk.colorize("&7    add               — append a line"));
+            sender.sendMessage(PlayerMilk.colorize("&7    remove <number>   — delete a line"));
+            sender.sendMessage(PlayerMilk.colorize("&7    clear             — remove all lore"));
+            List<String> current = config.getStringList(configPath);
+            if (current.isEmpty()) {
+                sender.sendMessage(PlayerMilk.colorize("&7Current lore: &8(empty)"));
+            } else {
+                sender.sendMessage(PlayerMilk.colorize("&7Current lore:"));
+                for (int i = 0; i < current.size(); i++) {
+                    sender.sendMessage(PlayerMilk.colorize("&7  " + (i + 1) + ". &f" + current.get(i)));
+                }
+            }
+            return;
+        }
+
+        String lineArg = args[2];
+        List<String> current = config.getStringList(configPath);
+
+        if (lineArg.equalsIgnoreCase("add")) {
+            String text = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
+            current.add(text);
+            config.set(configPath, current);
+            PlayerMilk.getInstance().saveConfig();
+            sender.sendMessage(PlayerMilk.colorize("&aLore line added: &f" + text));
+            return;
+        }
+
+        if (lineArg.equalsIgnoreCase("remove")) {
+            if (args.length < 4) {
+                sender.sendMessage(PlayerMilk.colorize("&cUsage: /" + label + " set bucket-lore remove <line_number>"));
+                return;
+            }
+            try {
+                int lineNum = Integer.parseInt(args[3]);
+                if (lineNum < 1 || lineNum > current.size()) {
+                    sender.sendMessage(PlayerMilk.colorize("&cInvalid line number! Range: 1-" + current.size()));
+                    return;
+                }
+                String removed = current.remove(lineNum - 1);
+                config.set(configPath, current);
+                PlayerMilk.getInstance().saveConfig();
+                sender.sendMessage(PlayerMilk.colorize("&aRemoved lore line: &f" + removed));
+            } catch (NumberFormatException e) {
+                sender.sendMessage(PlayerMilk.colorize("&cInvalid line number!"));
+            }
+            return;
+        }
+
+        if (lineArg.equalsIgnoreCase("clear")) {
+            config.set(configPath, new ArrayList<>());
+            PlayerMilk.getInstance().saveConfig();
+            sender.sendMessage(PlayerMilk.colorize("&aLore cleared."));
+            return;
+        }
+
+        try {
+            int lineNum = Integer.parseInt(lineArg);
+            if (args.length < 4) {
+                sender.sendMessage(PlayerMilk.colorize("&cUsage: /" + label + " set bucket-lore " + lineNum + " <text>"));
+                return;
+            }
+            String text = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
+            while (current.size() < lineNum) {
+                current.add("");
+            }
+            current.set(lineNum - 1, text);
+            config.set(configPath, current);
+            PlayerMilk.getInstance().saveConfig();
+            sender.sendMessage(PlayerMilk.colorize("&aSet lore line " + lineNum + " to: &f" + text));
+        } catch (NumberFormatException e) {
+            sender.sendMessage(PlayerMilk.colorize("&cInvalid line number or sub-command!"));
+        }
+    }
+
     private void handleSet(CommandSender sender, String[] args, String label) {
         FileConfiguration config = PlayerMilk.getInstance().getConfig();
 
@@ -265,13 +347,18 @@ public final class PlayerMilkCommand implements CommandExecutor, TabCompleter {
             return;
         }
 
-        if (args.length < 3) {
+        if (args.length < 3 && !"bucket-lore".equals(key)) {
             sender.sendMessage(PlayerMilk.colorize("&cUsage: /playermilk set " + key + " <value>"));
             return;
         }
 
         String value = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
         String configPath = SETTINGS_MAP.get(key);
+
+        if ("bucket-lore".equals(key)) {
+            handleBucketLoreSet(sender, args, configPath, label);
+            return;
+        }
 
         try {
             Object current = config.get(configPath);

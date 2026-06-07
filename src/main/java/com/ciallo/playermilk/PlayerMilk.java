@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,25 +141,39 @@ public final class PlayerMilk extends JavaPlugin {
 
         double damage = config.getDouble("Milk.Damage", 1.0);
         if (damage > 0) {
-
-            milkDamageTracker.put(target.getUniqueId(), milker.getUniqueId());
             target.damage(damage);
+            if (target.isDead()) {
+                milkDamageTracker.put(target.getUniqueId(), milker.getUniqueId());
+            }
         }
 
         ItemStack milkBucket = new ItemStack(Material.MILK_BUCKET);
         ItemMeta meta = milkBucket.getItemMeta();
         String bucketName = config.getString("Milk.Bucket_Name", "&f{player2}'s Milk");
-        if (meta != null && bucketName != null && !bucketName.isEmpty() && !bucketName.equalsIgnoreCase("none")) {
-            String dateStr = new SimpleDateFormat(config.getString("Date_Format", "yyyy-MM-dd HH:mm:ss")).format(new Date());
-            String name = bucketName
-                    .replace("{player}", milker.getName())
-                    .replace("{player2}", target.getName())
-                    .replace("{time}", dateStr);
-            meta.setDisplayName(colorize(name));
-            milkBucket.setItemMeta(meta);
-        }
-
         if (meta != null) {
+            if (bucketName != null && !bucketName.isEmpty() && !bucketName.equalsIgnoreCase("none")) {
+                String dateStr = new SimpleDateFormat(config.getString("Date_Format", "yyyy-MM-dd HH:mm:ss")).format(new Date());
+                String name = bucketName
+                        .replace("{player}", milker.getName())
+                        .replace("{player2}", target.getName())
+                        .replace("{time}", dateStr);
+                meta.setDisplayName(colorize(name));
+            }
+
+            List<String> bucketLore = config.getStringList("Milk.Bucket_Lore");
+            if (bucketLore != null && !bucketLore.isEmpty()) {
+                String dateStr = new SimpleDateFormat(config.getString("Date_Format", "yyyy-MM-dd HH:mm:ss")).format(new Date());
+                List<String> coloredLore = new ArrayList<>();
+                for (String line : bucketLore) {
+                    String loreLine = line
+                            .replace("{player}", milker.getName())
+                            .replace("{player2}", target.getName())
+                            .replace("{time}", dateStr);
+                    coloredLore.add(colorize(loreLine));
+                }
+                meta.setLore(coloredLore);
+            }
+
             PersistentDataContainer pdc = meta.getPersistentDataContainer();
             pdc.set(milkTagKey, PersistentDataType.BOOLEAN, true);
             milkBucket.setItemMeta(meta);
