@@ -59,14 +59,30 @@ public final class PlayerMilkCommand implements CommandExecutor, TabCompleter {
         }
 
         switch (args[0].toLowerCase()) {
+            case "help":
+                sendHelp(sender, label);
+                break;
+            case "about":
+                sender.sendMessage(PlayerMilk.colorize("&8[&cPlayerMilk&8]&7"));
+                sender.sendMessage(PlayerMilk.colorize("&7Version: &f" + PlayerMilk.getInstance().getDescription().getVersion()));
+                sender.sendMessage(PlayerMilk.colorize("&7Author: &f P1ay2r"));
+                sender.sendMessage(PlayerMilk.colorize("&7Description: &fRight-click players with an empty bucket to milk them!"));
+                break;
             case "reload":
+                if (!sender.hasPermission("playermilk.reload")) {
+                    sender.sendMessage(PlayerMilk.colorize("&c没有权限使用此子命令。需要: playermilk.reload"));
+                    return true;
+                }
                 PlayerMilk.reload();
                 sender.sendMessage(PlayerMilk.colorize(
                         PlayerMilk.getInstance().getConfig().getString("Command.Reload",
                                 "&aConfiguration reloaded!")));
                 break;
-
             case "toggle":
+                if (!sender.hasPermission("playermilk.toggle")) {
+                    sender.sendMessage(PlayerMilk.colorize("&c没有权限使用此子命令。需要: playermilk.toggle"));
+                    return true;
+                }
                 boolean nowEnabled = PlayerMilk.toggleEnabled();
                 if (nowEnabled) {
                     sender.sendMessage(PlayerMilk.colorize(
@@ -78,26 +94,20 @@ public final class PlayerMilkCommand implements CommandExecutor, TabCompleter {
                                     "&cPlayerMilk has been disabled!")));
                 }
                 break;
-
-            case "help":
-                sendHelp(sender, label);
-                break;
-
-            case "about":
-                sender.sendMessage(PlayerMilk.colorize("&8[&cPlayerMilk&8]&7"));
-                sender.sendMessage(PlayerMilk.colorize("&7Version: &f" + PlayerMilk.getInstance().getDescription().getVersion()));
-                sender.sendMessage(PlayerMilk.colorize("&7Author: &f P1ay2r"));
-                sender.sendMessage(PlayerMilk.colorize("&7Description: &fRight-click players with an empty bucket to milk them!"));
-                break;
-
             case "set":
+                if (!sender.hasPermission("playermilk.set")) {
+                    sender.sendMessage(PlayerMilk.colorize("&c没有权限使用此子命令。需要: playermilk.set"));
+                    return true;
+                }
                 handleSet(sender, args, label);
                 break;
-
             case "effects":
+                if (!sender.hasPermission("playermilk.effects")) {
+                    sender.sendMessage(PlayerMilk.colorize("&c没有权限使用此子命令。需要: playermilk.effects"));
+                    return true;
+                }
                 handleEffects(sender, args, label);
                 break;
-
             default:
                 sendHelp(sender, label);
                 break;

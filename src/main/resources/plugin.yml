@@ -10,9 +10,22 @@ commands:
     description: Main PlayerMilk command
     aliases: [pmilk]
     permission: playermilk.admin
+    permission-message: '&c你需要 playermilk.admin 权限'
     usage: /<command> [help|reload|toggle|about|set|effects]
 
 permissions:
   playermilk.admin:
-    description: Allows using PlayerMilk commands
+    description: 所有 PlayerMilk 权限
+    default: op
+  playermilk.toggle:
+    description: 允许使用 /playermilk toggle 开关插件
+    default: op
+  playermilk.reload:
+    description: 允许使用 /playermilk reload 重载配置
+    default: op
+  playermilk.set:
+    description: 允许使用 /playermilk set 修改设置
+    default: op
+  playermilk.effects:
+    description: 允许使用 /playermilk effects 管理效果
     default: op

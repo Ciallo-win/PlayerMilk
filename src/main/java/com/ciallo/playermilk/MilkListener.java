@@ -52,7 +52,7 @@ public final class MilkListener implements Listener {
         PlayerMilk.milkPlayer(milker, target);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player target = event.getEntity();
 

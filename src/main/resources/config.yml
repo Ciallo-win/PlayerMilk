@@ -2,6 +2,9 @@
 #  PlayerMilk Configuration
 # =========================================
 
+# Config schema version (do not edit manually)
+config-version: 2
+
 # Whether the plugin is enabled
 Milk:
   Enabled: true

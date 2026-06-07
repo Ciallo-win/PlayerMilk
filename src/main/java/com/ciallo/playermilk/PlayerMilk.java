@@ -83,6 +83,8 @@ public final class PlayerMilk extends JavaPlugin {
         saveDefaultConfig();
         reloadConfig();
 
+        upgradeConfig();
+
         loadCooldowns();
 
         milkTagKey = new NamespacedKey(this, "playermilk_bucket");
@@ -103,8 +105,33 @@ public final class PlayerMilk extends JavaPlugin {
 
     public static void reload() {
         instance.reloadConfig();
+        instance.upgradeConfig();
         loadCooldowns();
         instance.getLogger().info("Configuration reloaded.");
+    }
+
+    private void upgradeConfig() {
+        FileConfiguration config = getConfig();
+        int currentVersion = config.getInt("config-version", 1);
+
+        if (currentVersion < 2) {
+            if (!config.contains("Milk.Allow_Chestplate_Milk")) {
+                config.set("Milk.Allow_Chestplate_Milk", false);
+            }
+            if (!config.contains("Milk.Bucket_Lore")) {
+                List<String> defaultLore = new ArrayList<>();
+                defaultLore.add("&7挤奶者: &f{player}");
+                defaultLore.add("&7被挤者: &f{player2}");
+                defaultLore.add("&7时间: &f{time}");
+                config.set("Milk.Bucket_Lore", defaultLore);
+            }
+            if (!config.contains("Messages.Chestplate_Block")) {
+                config.set("Messages.Chestplate_Block", "&c不能给穿胸甲的玩家挤奶！");
+            }
+            config.set("config-version", 2);
+            saveConfig();
+            getLogger().info("Config upgraded to version 2.");
+        }
     }
 
     public static boolean milkPlayer(Player milker, Player target) {
